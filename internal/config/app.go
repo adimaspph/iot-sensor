@@ -1,6 +1,13 @@
 package config
 
 import (
+	"context"
+	"iot-sensor/internal/delivery/messaging"
+	"os"
+	"os/signal"
+	"time"
+
+	mqtt "github.com/eclipse/paho.mqtt.golang"
 	"github.com/go-playground/validator/v10"
 	"github.com/labstack/echo/v4"
 	"github.com/sirupsen/logrus"
@@ -12,6 +19,7 @@ type BootstrapConfig struct {
 	Log      *logrus.Logger
 	Validate *validator.Validate
 	Config   *viper.Viper
+	Mqtt     *mqtt.Client
 }
 
 func Bootstrap(config *BootstrapConfig) {
