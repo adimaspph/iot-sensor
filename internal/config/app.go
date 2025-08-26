@@ -1,10 +1,7 @@
 package config
 
 import (
-	"context"
 	"iot-sensor/internal/delivery/messaging"
-	"os"
-	"os/signal"
 	"time"
 
 	mqtt "github.com/eclipse/paho.mqtt.golang"
@@ -23,6 +20,27 @@ type BootstrapConfig struct {
 }
 
 func Bootstrap(config *BootstrapConfig) {
-	// setup usecase
+	// setup MQTT broker
+	v := config.Config
+	topic := v.GetString("MQTT_TOPIC")
+	id1 := v.GetString("SENSOR_ID_1")
+	id2 := v.GetInt("SENSOR_ID_2")
+	sensorType := v.GetString("SENSOR_TYPE")
+	interval := v.GetInt("PUBLISH_INTERVAL")
+	pubInterval := time.Duration(interval) * time.Second
+	min := v.GetFloat64("PUBLISH_MIN")
+	max := v.GetFloat64("PUBLISH_MAX")
+	sensorPubliser := messaging.NewSensorPublisher(
+		config.Log,
+		*config.Mqtt,
+		topic,
+		id1,
+		id2,
+		sensorType,
+		pubInterval,
+		min,
+		max,
+	)
 
+	sensorPubliser.Start()
 }
