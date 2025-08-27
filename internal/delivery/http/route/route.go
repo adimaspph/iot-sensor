@@ -12,5 +12,5 @@ type RouteConfig struct {
 }
 
 func (c *RouteConfig) Setup() {
-	c.App.PATCH("/api/change", c.SensorController.ChangeInterval)
+	c.App.PATCH("/api/sensor/change-interval", c.SensorController.ChangeInterval)
 }
