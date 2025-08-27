@@ -7,3 +7,7 @@ type SensorPayload struct {
 	SensorValue float64 `json:"sensor_value"`
 	Timestamp   string  `json:"timestamp"`
 }
+
+type ChangeIntervalRequest struct {
+	Interval int `json:"interval" validate:"required,gte=1,lte=100"`
+}

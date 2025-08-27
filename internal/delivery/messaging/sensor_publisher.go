@@ -5,6 +5,7 @@ import (
 	"iot-sensor/internal/model"
 	"math"
 	"math/rand"
+	"sync"
 	"time"
 
 	"github.com/eclipse/paho.mqtt.golang"
@@ -15,13 +16,19 @@ type SensorPublisher struct {
 	Log        *logrus.Logger
 	Rnd        *rand.Rand
 	MqttClient mqtt.Client
+
 	topic      string
 	id1        string
 	id2        int
 	sensorType string
+
 	interval   time.Duration
-	min        float64
-	max        float64
+	intervalCh chan time.Duration
+	stopCh     chan struct{}
+	stopOnce   sync.Once
+
+	min float64
+	max float64
 }
 
 func NewSensorPublisher(
@@ -35,6 +42,9 @@ func NewSensorPublisher(
 	min float64,
 	max float64,
 ) *SensorPublisher {
+	if interval < 0 {
+		interval = time.Second
+	}
 	return &SensorPublisher{
 		Log:        logger,
 		Rnd:        rand.New(rand.NewSource(time.Now().UnixNano())),
@@ -44,23 +54,21 @@ func NewSensorPublisher(
 		id2:        id2,
 		sensorType: sensorType,
 		interval:   interval,
+		intervalCh: make(chan time.Duration, 1),
+		stopCh:     make(chan struct{}),
 		min:        min,
 		max:        max,
 	}
 }
 
 func (s *SensorPublisher) Start() {
-
-	if s.interval < 0 {
-		s.interval = time.Second
-	}
-
 	ticker := time.NewTicker(s.interval)
-	s.Log.WithFields(logrus.Fields{"topic": s.topic, "interval": s.interval}).Info("sensor publisher started")
-	defer func() {
-		ticker.Stop()
-		s.Log.Info("sensor publisher stopped")
-	}()
+	defer ticker.Stop()
+
+	s.Log.WithFields(logrus.Fields{
+		"topic":    s.topic,
+		"interval": s.interval,
+	}).Info("sensor publisher started")
 
 	for {
 		select {
@@ -71,7 +79,6 @@ func (s *SensorPublisher) Start() {
 				s.Log.WithError(err).Error("marshal payload")
 				continue
 			}
-
 			tok := s.MqttClient.Publish(s.topic, 0, true, b)
 			tok.Wait()
 			if err := tok.Error(); err != nil {
@@ -79,8 +86,41 @@ func (s *SensorPublisher) Start() {
 				continue
 			}
 			s.Log.WithField("payload", string(b)).Debug("published")
+
+		case newInterval := <-s.intervalCh:
+			if newInterval <= 0 {
+				newInterval = time.Second
+			}
+			if newInterval != s.interval {
+				ticker.Stop()
+				ticker = time.NewTicker(newInterval)
+				s.interval = newInterval
+				s.Log.WithField("interval", s.interval).Info("sensor publisher interval updated")
+			}
+
+		case <-s.stopCh:
+			s.Log.Info("sensor publisher stopped")
+			return
 		}
 	}
+}
+
+func (s *SensorPublisher) SetInterval(newInterval time.Duration) {
+	// non-blocking send; last update wins if buffer is full
+	select {
+	case s.intervalCh <- newInterval:
+	default:
+		// drain and send latest
+		select {
+		case <-s.intervalCh:
+		default:
+		}
+		s.intervalCh <- newInterval
+	}
+}
+
+func (s *SensorPublisher) Stop() {
+	s.stopOnce.Do(func() { close(s.stopCh) })
 }
 
 func (s *SensorPublisher) nextReading() model.SensorPayload {
