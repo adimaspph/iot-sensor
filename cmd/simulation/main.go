@@ -25,8 +25,8 @@ func main() {
 	sensorType := viperConfig.GetString("SENSOR_TYPE")
 	interval := viperConfig.GetInt("PUBLISH_INTERVAL")
 	pubInterval := time.Duration(interval) * time.Second
-	min := viperConfig.GetFloat64("PUBLISH_MIN")
-	max := viperConfig.GetFloat64("PUBLISH_MAX")
+	min := viperConfig.GetFloat64("SENSOR_VALUE_MIN")
+	max := viperConfig.GetFloat64("SENSOR_VALUE_MIN")
 
 	for i := 0; i < 100; i++ {
 		go func() {
