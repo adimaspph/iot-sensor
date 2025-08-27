@@ -1,7 +1,10 @@
 package config
 
 import (
+	"iot-sensor/internal/delivery/http"
+	"iot-sensor/internal/delivery/http/route"
 	"iot-sensor/internal/delivery/messaging"
+	"iot-sensor/internal/usecase"
 	"time"
 
 	mqtt "github.com/eclipse/paho.mqtt.golang"
@@ -41,6 +44,18 @@ func Bootstrap(config *BootstrapConfig) {
 		min,
 		max,
 	)
+
+	// setup use cases
+	sensorUseCase := usecase.NewSensorUsecase(config.Log, config.Validate, sensorPubliser)
+
+	// setup controller
+	sensorController := http.NewSensorController(sensorUseCase, config.Log)
+
+	routeConfig := route.RouteConfig{
+		App:              config.App,
+		SensorController: sensorController,
+	}
+	routeConfig.Setup()
 
 	sensorPubliser.Start()
 }
