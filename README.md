@@ -127,7 +127,7 @@ Run the built-in simulator to publish MQTT messages from **100 virtual sensors**
 ### Steps
 ```bash
 go mod download
-cp .env.example .env   # if available
+cp .env.simulation .env
 go run ./cmd/simulation
 ````
 
