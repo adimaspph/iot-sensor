@@ -32,7 +32,7 @@ func Bootstrap(config *BootstrapConfig) {
 	interval := v.GetInt("PUBLISH_INTERVAL")
 	pubInterval := time.Duration(interval) * time.Second
 	min := v.GetFloat64("SENSOR_VALUE_MIN")
-	max := v.GetFloat64("SENSOR_VALUE_MIN")
+	max := v.GetFloat64("SENSOR_VALUE_MAX")
 	sensorPubliser := messaging.NewSensorPublisher(
 		config.Log,
 		*config.Mqtt,
