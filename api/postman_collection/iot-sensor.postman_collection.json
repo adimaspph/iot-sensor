@@ -1,0 +1,89 @@
+{
+	"info": {
+		"_postman_id": "df4ec1c7-cb0a-49b7-a0ba-b9ba6cb9d2d1",
+		"name": "iot-sensor",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "18297536"
+	},
+	"item": [
+		{
+			"name": "Change Interval",
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"interval\": 3\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8081/api/sensor/change-interval",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"api",
+						"sensor",
+						"change-interval"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Change publish Interval Example",
+					"originalRequest": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"interval\": 3\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8081/api/sensor/change-interval",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"api",
+								"sensor",
+								"change-interval"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": null,
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Date",
+							"value": "Thu, 28 Aug 2025 07:49:45 GMT"
+						},
+						{
+							"key": "Content-Length",
+							"value": "76"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"message\": \"sensor publish interval updated successfully to 3 second\"\n}"
+				}
+			]
+		}
+	]
+}

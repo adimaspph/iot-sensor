@@ -1,0 +1,64 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "iot-sensor API",
+    "version": "1.0.0",
+    "description": "Auto-generated from Postman collection 'iot-sensor'."
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8081"
+    }
+  ],
+  "paths": {
+    "/api/sensor/change-interval": {
+      "patch": {
+        "tags": [
+          "iot-sensor"
+        ],
+        "summary": "Change Interval",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": {
+                  "message": "sensor publish interval updated successfully to 3 second"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "interval": {
+                    "type": "integer"
+                  }
+                },
+                "required": [
+                  "interval"
+                ]
+              },
+              "example": {
+                "interval": 3
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
