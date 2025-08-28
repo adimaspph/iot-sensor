@@ -3,7 +3,7 @@ package usecase
 import (
 	"context"
 	"fmt"
-	"iot-sensor/internal/delivery/messaging"
+	"iot-sensor/internal/gateway/messaging"
 	"iot-sensor/internal/model"
 	"time"
 

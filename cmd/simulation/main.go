@@ -2,7 +2,7 @@ package main
 
 import (
 	"iot-sensor/internal/config"
-	"iot-sensor/internal/delivery/messaging"
+	"iot-sensor/internal/gateway/messaging"
 	"os"
 	"os/signal"
 	"strconv"

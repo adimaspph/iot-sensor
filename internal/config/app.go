@@ -3,7 +3,7 @@ package config
 import (
 	"iot-sensor/internal/delivery/http"
 	"iot-sensor/internal/delivery/http/route"
-	"iot-sensor/internal/delivery/messaging"
+	"iot-sensor/internal/gateway/messaging"
 	"iot-sensor/internal/usecase"
 	"time"
 
