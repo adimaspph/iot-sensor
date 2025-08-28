@@ -137,7 +137,7 @@ go run ./cmd/simulation
 
 ```bash  
 go mod download
-cp .env.example .env   # if available
+cp .env.example .env
 go run ./cmd/web
 ```
   
