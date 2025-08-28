@@ -1,0 +1,23 @@
+services:
+  api:
+    build: .
+    container_name: iot-sensor
+    ports:
+      - "${APP_PORT}:8081"
+    env_file:
+      - .env
+    networks:
+      - external-network
+    deploy:
+      resources:
+        reservations:
+          cpus: "0.5"
+          memory: 512M
+        limits:
+          cpus: "1.0"
+          memory: 1g
+
+networks:
+  external-network:
+    name: "external-network"
+    driver: bridge
